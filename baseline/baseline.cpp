@@ -5,6 +5,7 @@
 #include <string>
 #include <thread>
 #include <time.h>
+#include <unistd.h>
 
 #include "baseline.h"
 
@@ -85,7 +86,13 @@ void file_reader::random_file_seek()
 
             if(has_nvme_support() && is_file_on_nvme(file_id))
             {
-                std::this_thread::sleep_for(std::chrono::nanoseconds(delay));
+                // std::this_thread::sleep_for(std::chrono::nanoseconds(delay));
+                std::cout << "NVMe: Delay: " << delay << ": ";
+                int count = 0;
+                while(count < delay/4)
+                {
+                    count++;
+                }
             }
 
             auto finish = std::chrono::high_resolution_clock::now();
@@ -138,9 +145,9 @@ bool file_reader::read_file(const std::string filename, std::vector<char>& buf)
     file.read(buf.data(), file_size);
 
     auto finish = std::chrono::high_resolution_clock::now();
-    // std::cout << "Read 1 file from HDD: " 
-    //     << std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()
-    //     << " ns" << std::endl;
+    std::cout << "Read 1 file from HDD: " 
+        << std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()
+        << " ns" << std::endl;
 
     return true;
 }
@@ -169,7 +176,16 @@ int main(int argc, char** argv)
     std::string dataset_path = "dummy";
     int capacity = 100;
     int dataset_size = 300;
-    bool has_nvme_support = true;
+    bool has_nvme_support = false;
+    for (int i = 0; i < argc; i++)
+    {
+        std::string argv_str(argv[i]);
+        if(argv_str == "--enable-nvme")
+        {
+            has_nvme_support = true;
+        }
+    }
+
     file_reader _file_reader(capacity, dataset_path, dataset_size, has_nvme_support);
     _file_reader.prefetch_files();
     // std::cout << _file_reader.get_file_content_map().size() << std::endl;
