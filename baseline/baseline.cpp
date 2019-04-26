@@ -87,7 +87,7 @@ void file_reader::random_file_seek()
             if(has_nvme_support() && is_file_on_nvme(file_id))
             {
                 // std::this_thread::sleep_for(std::chrono::nanoseconds(delay));
-                std::cout << "NVMe: Delay: " << delay << ": ";
+                // std::cout << "NVMe: Delay: " << delay << ": ";
                 int count = 0;
                 while(count < delay/4)
                 {
@@ -101,9 +101,9 @@ void file_reader::random_file_seek()
             m_time_memory_hit += mem_time;
             m_num_memory_hit++;
 
-            std::cout << "Read 1 file from MEM: " 
-                << std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()
-                << " ns" << std::endl;
+            // std::cout << "Read 1 file from MEM: " 
+            //     << std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()
+            //     << " ns" << std::endl;
         }
         catch(std::exception& e)
         {
@@ -145,9 +145,9 @@ bool file_reader::read_file(const std::string filename, std::vector<char>& buf)
     file.read(buf.data(), file_size);
 
     auto finish = std::chrono::high_resolution_clock::now();
-    std::cout << "Read 1 file from HDD: " 
-        << std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()
-        << " ns" << std::endl;
+    // std::cout << "Read 1 file from HDD: " 
+    //     << std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()
+    //     << " ns" << std::endl;
 
     return true;
 }
@@ -183,6 +183,14 @@ int main(int argc, char** argv)
         if(argv_str == "--enable-nvme")
         {
             has_nvme_support = true;
+        }
+        if(argv_str == "--capacity")
+        {
+            capacity = std::stoi(std::string(argv[i+1]));
+        }
+        if(argv_str == "--dataset-size")
+        {
+            dataset_size = std::stoi(std::string(argv[i+2]));
         }
     }
 
