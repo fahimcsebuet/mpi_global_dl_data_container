@@ -68,7 +68,7 @@ void file_reader::prefetch_files()
         fetch_file(i);
     }
     auto finish = std::chrono::high_resolution_clock::now();
-    std::cout << "Prefetch: " << std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() << " ns" << std::endl;
+    // std::cout << "Prefetch: " << std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() << " ns" << std::endl;
 }
 
 void file_reader::random_file_seek()
@@ -115,7 +115,8 @@ void file_reader::random_file_seek()
         }
     }
     auto finish = std::chrono::high_resolution_clock::now();
-    std::cout << "Read 1000 files: " << std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() << " ns" << std::endl;
+    // std::cout << "Read 1000 files: " << std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() << " ns" << std::endl;
+    std::cout << m_nvme_support << "," << m_capacity << "," << std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count() << std::endl;
 }
 
 bool file_reader::has_memory_capacity()
